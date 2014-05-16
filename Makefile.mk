@@ -74,6 +74,10 @@ $(error X11 missing, cannot continue)
 endif
 endif
 
+ifneq ($(shell pkg-config --exists libprojectM && echo true),true)
+$(error projectM missing, cannot continue)
+endif
+
 # --------------------------------------------------------------
 # Set libs stuff
 
