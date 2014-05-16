@@ -19,13 +19,18 @@ BUILD_CXX_FLAGS += -I. -I../../dpf/distrho -I../../dpf/dgl
 # --------------------------------------------------------------
 # Enable all possible plugin types
 
+ifeq ($(LINUX),true)
+all: jack lv2 vst
+else
 all: lv2 vst
+endif
 
 # --------------------------------------------------------------
 # Set plugin binary file targets
 
-lv2 = $(TARGET_DIR)/$(NAME).lv2/$(NAME).$(EXT)
-vst = $(TARGET_DIR)/$(NAME)-vst.$(EXT)
+jack = $(TARGET_DIR)/$(NAME)
+lv2  = $(TARGET_DIR)/$(NAME).lv2/$(NAME).$(EXT)
+vst  = $(TARGET_DIR)/$(NAME)-vst.$(EXT)
 
 # TODO: MacOS VST bundle
 
@@ -47,6 +52,15 @@ DISTRHO_UI_FILES     = ../../dpf/distrho/DistrhoUIMain.cpp ../../dpf/libdgl.a
 clean:
 	rm -f *.o
 	rm -rf $(TARGET_DIR)/$(NAME)-* $(TARGET_DIR)/$(NAME).lv2/
+
+# --------------------------------------------------------------
+# JACK
+
+jack: $(jack)
+
+$(jack): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
+	mkdir -p $(shell dirname $@)
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(shell pkg-config --libs jack libprojectM) -lpthread -DDISTRHO_PLUGIN_TARGET_JACK -o $@
 
 # --------------------------------------------------------------
 # LV2
