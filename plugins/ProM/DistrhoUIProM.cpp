@@ -91,7 +91,10 @@ void DistrhoUIProM::d_uiIdle()
 void DistrhoUIProM::onDisplay()
 {
     if (fPM == nullptr)
-        return;
+    {
+        fPM = new projectM(kSettings); // std::string("/usr/share/projectM/config.inp"));
+        fPM->projectM_resetGL(getWidth(), getHeight());
+    }
 
     fPM->renderFrame();
 }
@@ -240,45 +243,22 @@ bool DistrhoUIProM::onSpecial(bool press, uint key)
 
 void DistrhoUIProM::onReshape(int width, int height)
 {
-    /* Our shading model--Gouraud (smooth). */
     glShadeModel(GL_SMOOTH);
 
-    /* Set the clear color. */
-    glClearColor(0, 0, 0, 0);
-    /* Setup our viewport. */
-    glViewport(0, 0, width, height);
-
-    /*
-    * Change to the projection matrix and set
-    * our viewing volume.
-    */
     glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-
-    //gluOrtho2D(0.0, (GLfloat) width, 0.0, (GLfloat) height);
-    //glOrtho(0, width, height, 0, 0.0f, 1.0f);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     glDrawBuffer(GL_BACK);
     glReadBuffer(GL_BACK);
     glEnable(GL_BLEND);
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POINT_SMOOTH);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
 
     glLineStipple(2, 0xAAAA);
 
-    if (fPM == nullptr)
-        fPM = new projectM(kSettings); // std::string("/usr/share/projectM/config.inp"));
-
-    fPM->projectM_resetGL(width, height);
+    if (fPM != nullptr)
+        fPM->projectM_resetGL(width, height);
 }
 
 // -----------------------------------------------------------------------
