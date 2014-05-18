@@ -85,16 +85,45 @@ void DistrhoUIProM::d_uiIdle()
     }
 }
 
+void DistrhoUIProM::d_uiReshape(int width, int height)
+{
+    glEnable(GL_BLEND);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glShadeModel(GL_SMOOTH);
+
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, height, 0, 0.0f, 1.0f);
+    glViewport(0, 0, width, height);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glDrawBuffer(GL_BACK);
+    glReadBuffer(GL_BACK);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glLineStipple(2, 0xAAAA);
+
+    if (fPM == nullptr)
+        fPM = new projectM(kSettings); // std::string("/usr/share/projectM/config.inp"));
+
+    fPM->projectM_resetGL(width, height);
+}
+
 // -----------------------------------------------------------------------
 // Widget Callbacks
 
 void DistrhoUIProM::onDisplay()
 {
     if (fPM == nullptr)
-    {
-        fPM = new projectM(kSettings); // std::string("/usr/share/projectM/config.inp"));
-        fPM->projectM_resetGL(getWidth(), getHeight());
-    }
+        return;
 
     fPM->renderFrame();
 }
@@ -239,26 +268,6 @@ bool DistrhoUIProM::onSpecial(bool press, uint key)
     fPM->key_handler(press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
 
     return true;
-}
-
-void DistrhoUIProM::onReshape(int width, int height)
-{
-    glShadeModel(GL_SMOOTH);
-
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-
-    glDrawBuffer(GL_BACK);
-    glReadBuffer(GL_BACK);
-    glEnable(GL_BLEND);
-
-    glEnable(GL_LINE_SMOOTH);
-    glEnable(GL_POINT_SMOOTH);
-
-    glLineStipple(2, 0xAAAA);
-
-    if (fPM != nullptr)
-        fPM->projectM_resetGL(width, height);
 }
 
 // -----------------------------------------------------------------------

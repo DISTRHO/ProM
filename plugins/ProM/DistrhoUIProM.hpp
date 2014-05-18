@@ -54,6 +54,7 @@ protected:
     // UI Callbacks
 
     void d_uiIdle() override;
+    void d_uiReshape(int width, int height) override;
 
     // -------------------------------------------------------------------
     // Widget Callbacks
@@ -61,7 +62,6 @@ protected:
     void onDisplay() override;
     bool onKeyboard(bool press, uint32_t key) override;
     bool onSpecial(bool press, uint key) override;
-    void onReshape(int width, int height) override;
 
 private:
     ScopedPointer<projectM> fPM;
