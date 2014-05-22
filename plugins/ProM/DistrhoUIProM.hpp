@@ -60,8 +60,8 @@ protected:
     // Widget Callbacks
 
     void onDisplay() override;
-    bool onKeyboard(bool press, uint32_t key) override;
-    bool onSpecial(bool press, uint key) override;
+    bool onKeyboard(const KeyboardEvent&) override;
+    bool onSpecial(const SpecialEvent&) override;
 
 private:
     ScopedPointer<projectM> fPM;

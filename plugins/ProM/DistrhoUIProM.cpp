@@ -128,7 +128,7 @@ void DistrhoUIProM::onDisplay()
     fPM->renderFrame();
 }
 
-bool DistrhoUIProM::onKeyboard(bool press, uint32_t key)
+bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
 {
     if (fPM == nullptr)
         return false;
@@ -136,15 +136,15 @@ bool DistrhoUIProM::onKeyboard(bool press, uint32_t key)
     projectMKeycode  pmKey = PROJECTM_K_NONE;
     projectMModifier pmMod = PROJECTM_KMOD_LSHIFT;
 
-    if ((key >= PROJECTM_K_0 && key <= PROJECTM_K_9) ||
-        (key >= PROJECTM_K_A && key <= PROJECTM_K_Z) ||
-        (key >= PROJECTM_K_a && key <= PROJECTM_K_z))
+    if ((ev.key >= PROJECTM_K_0 && ev.key <= PROJECTM_K_9) ||
+        (ev.key >= PROJECTM_K_A && ev.key <= PROJECTM_K_Z) ||
+        (ev.key >= PROJECTM_K_a && ev.key <= PROJECTM_K_z))
     {
-        pmKey = static_cast<projectMKeycode>(key);
+        pmKey = static_cast<projectMKeycode>(ev.key);
     }
     else
     {
-        switch (key)
+        switch (ev.key)
         {
         case DGL::CHAR_BACKSPACE:
             pmKey = PROJECTM_K_BACKSPACE;
@@ -161,18 +161,15 @@ bool DistrhoUIProM::onKeyboard(bool press, uint32_t key)
     if (pmKey == PROJECTM_K_NONE)
         return false;
 
-    if (const int mod = getModifiers())
-    {
-        if (mod & DGL::MODIFIER_CTRL)
-            pmMod = PROJECTM_KMOD_LCTRL;
-    }
+    if (ev.mod & DGL::MODIFIER_CTRL)
+        pmMod = PROJECTM_KMOD_LCTRL;
 
-    fPM->key_handler(press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
+    fPM->key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
 
     return true;
 }
 
-bool DistrhoUIProM::onSpecial(bool press, uint key)
+bool DistrhoUIProM::onSpecial(const SpecialEvent& ev)
 {
     if (fPM == nullptr)
         return false;
@@ -180,7 +177,7 @@ bool DistrhoUIProM::onSpecial(bool press, uint key)
     projectMKeycode  pmKey = PROJECTM_K_NONE;
     projectMModifier pmMod = PROJECTM_KMOD_LSHIFT;
 
-    switch (key)
+    switch (ev.key)
     {
     case DGL::KEY_F1:
         pmKey = PROJECTM_K_F1;
@@ -259,13 +256,10 @@ bool DistrhoUIProM::onSpecial(bool press, uint key)
     if (pmKey == PROJECTM_K_NONE)
         return false;
 
-    if (const int mod = getModifiers())
-    {
-        if (mod & DGL::MODIFIER_CTRL)
-            pmMod = PROJECTM_KMOD_LCTRL;
-    }
+    if (ev.mod & DGL::MODIFIER_CTRL)
+        pmMod = PROJECTM_KMOD_LCTRL;
 
-    fPM->key_handler(press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
+    fPM->key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
 
     return true;
 }
