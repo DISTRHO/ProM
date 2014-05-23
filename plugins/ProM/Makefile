@@ -24,3 +24,12 @@ OBJS_UI  = \
 include ../Makefile.mk
 
 # --------------------------------------------------------------
+# Enable all possible plugin types
+
+ifeq ($(LINUX),true)
+all: jack lv2_one vst
+else
+all: lv2_one vst
+endif
+
+# --------------------------------------------------------------
