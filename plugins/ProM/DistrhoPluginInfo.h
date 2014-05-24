@@ -30,6 +30,7 @@
 #define DISTRHO_PLUGIN_WANT_STATE    0
 #define DISTRHO_PLUGIN_WANT_TIMEPOS  0
 
+#define DISTRHO_PLUGIN_IS_RT_SAFE         0
 #define DISTRHO_PLUGIN_WANT_DIRECT_ACCESS 1
 
 #define DISTRHO_PLUGIN_URI "http://distrho.sf.net/plugins/ProM"
