@@ -68,7 +68,7 @@ void DistrhoPluginProM::d_run(const float** inputs, float** outputs, uint32_t fr
     if (fPM == nullptr)
         return;
 
-    if (PCM* const pcm = fPM->pcm())
+    if (PCM* const pcm = const_cast<PCM*>fPM->pcm())
         pcm->addPCMfloat(in, frames);
 }
 
