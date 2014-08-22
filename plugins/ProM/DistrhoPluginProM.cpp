@@ -60,7 +60,7 @@ void DistrhoPluginProM::d_run(const float** inputs, float** outputs, uint32_t fr
     const float* in  = inputs[0];
     float*       out = outputs[0];
 
-    if (in != out)
+    if (out != in)
         std::memcpy(out, in, sizeof(float)*frames);
 
     const MutexLocker csm(fMutex);
@@ -68,7 +68,7 @@ void DistrhoPluginProM::d_run(const float** inputs, float** outputs, uint32_t fr
     if (fPM == nullptr)
         return;
 
-    if (PCM* const pcm = const_cast<PCM*>(fPM->pcm()))
+    if (PCM* const pcm = fPM->pcm())
         pcm->addPCMfloat(in, frames);
 }
 

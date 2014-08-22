@@ -62,7 +62,7 @@ all:
 %.c.o: %.c
 	$(CC) $< $(BUILD_C_FLAGS) -c -o $@
 
-%.cpp.o: %.cpp
+%.cpp.o: %.cpp ../../dpf/distrho/*
 	$(CXX) $< $(BUILD_CXX_FLAGS) -c -o $@
 
 clean:

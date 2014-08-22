@@ -33,19 +33,6 @@ public:
 
 protected:
     // -------------------------------------------------------------------
-    // Information
-
-    uint d_getWidth() const noexcept override
-    {
-        return 512;
-    }
-
-    uint d_getHeight() const noexcept override
-    {
-        return 512;
-    }
-
-    // -------------------------------------------------------------------
     // DSP Callbacks
 
     void d_parameterChanged(uint32_t, float) override;
@@ -54,7 +41,7 @@ protected:
     // UI Callbacks
 
     void d_uiIdle() override;
-    void d_uiReshape(int width, int height) override;
+    void d_uiReshape(uint width, uint height) override;
 
     // -------------------------------------------------------------------
     // Widget Callbacks

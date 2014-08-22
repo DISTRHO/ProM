@@ -23,6 +23,7 @@ START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
+#if 0
 static const projectM::Settings kSettings = {
     /* meshX        */ 32,
     /* meshY        */ 24,
@@ -41,12 +42,14 @@ static const projectM::Settings kSettings = {
     /* shuffleEnabled        */ true,
     /* softCutRatingsEnabled */ false
 };
+#endif
 
 // -----------------------------------------------------------------------
 
 DistrhoUIProM::DistrhoUIProM()
     : UI()
 {
+    setSize(512, 512);
 }
 
 DistrhoUIProM::~DistrhoUIProM()
@@ -85,7 +88,7 @@ void DistrhoUIProM::d_uiIdle()
     }
 }
 
-void DistrhoUIProM::d_uiReshape(int width, int height)
+void DistrhoUIProM::d_uiReshape(uint width, uint height)
 {
     glEnable(GL_BLEND);
     glEnable(GL_LINE_SMOOTH);
@@ -112,7 +115,8 @@ void DistrhoUIProM::d_uiReshape(int width, int height)
     glLineStipple(2, 0xAAAA);
 
     if (fPM == nullptr)
-        fPM = new projectM(kSettings); // std::string("/usr/share/projectM/config.inp"));
+        //fPM = new projectM(kSettings);
+        fPM = new projectM("/usr/share/projectM/config.inp");
 
     fPM->projectM_resetGL(width, height);
 }
@@ -132,6 +136,31 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
 {
     if (fPM == nullptr)
         return false;
+
+    if (ev.press && (ev.key == '1' || ev.key == '+' || ev.key == '-'))
+    {
+        if (ev.key == '1')
+        {
+            if (getWidth() != 512 || getHeight() != 512)
+                setSize(512, 512);
+        }
+        else if (ev.key == '+')
+        {
+            /**/ if (getWidth() < 1100 && getHeight() < 1100)
+                setSize(getWidth()+100, getHeight()+100);
+            else if (getWidth() != 1100 || getHeight() != 1100)
+                    setSize(1100, 1100);
+        }
+        else if (ev.key == '-')
+        {
+            /**/ if (getWidth() >= 200 && getHeight() >= 200)
+                setSize(getWidth()-100, getHeight()-100);
+            else if (getWidth() != 100 || getHeight() != 100)
+                setSize(100, 100);
+        }
+
+        return true;
+    }
 
     projectMKeycode  pmKey = PROJECTM_K_NONE;
     projectMModifier pmMod = PROJECTM_KMOD_LSHIFT;
