@@ -75,18 +75,26 @@ LINK_FLAGS      = $(LINK_OPTS) $(LDFLAGS)
 endif
 
 # --------------------------------------------------------------
-# Check for required libs
+# Check for optional libs
 
 ifeq ($(LINUX),true)
-ifneq ($(shell pkg-config --exists jack && echo true),true)
-$(error JACK missing, cannot continue)
+HAVE_DGL   = $(shell pkg-config --exists gl x11 && echo true)
+HAVE_JACK  = $(shell pkg-config --exists jack   && echo true)
 endif
-ifneq ($(shell pkg-config --exists gl && echo true),true)
+
+ifeq ($(MACOS),true)
+HAVE_DGL = true
+endif
+
+ifeq ($(WIN32),true)
+HAVE_DGL = true
+endif
+
+# --------------------------------------------------------------
+# Check for required libs
+
+ifneq ($(HAVE_DGL),true)
 $(error OpenGL missing, cannot continue)
-endif
-ifneq ($(shell pkg-config --exists x11 && echo true),true)
-$(error X11 missing, cannot continue)
-endif
 endif
 
 ifneq ($(shell pkg-config --exists libprojectM && echo true),true)

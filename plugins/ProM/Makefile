@@ -26,10 +26,12 @@ include ../Makefile.mk
 # --------------------------------------------------------------
 # Enable all possible plugin types
 
-ifeq ($(LINUX),true)
-all: jack lv2_one vst
-else
-all: lv2_one vst
+ifeq ($(HAVE_JACK),true)
+TARGETS += jack
 endif
+TARGETS += lv2_one
+TARGETS += vst
+
+all: $(TARGETS)
 
 # --------------------------------------------------------------
