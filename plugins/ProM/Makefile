@@ -29,7 +29,7 @@ include ../Makefile.mk
 ifeq ($(HAVE_JACK),true)
 TARGETS += jack
 endif
-TARGETS += lv2_one
+TARGETS += lv2
 TARGETS += vst
 
 all: $(TARGETS)
