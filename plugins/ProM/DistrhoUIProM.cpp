@@ -47,14 +47,13 @@ static const projectM::Settings kSettings = {
 // -----------------------------------------------------------------------
 
 DistrhoUIProM::DistrhoUIProM()
-    : UI()
+    : UI(512, 512)
 {
-    setSize(512, 512);
 }
 
 DistrhoUIProM::~DistrhoUIProM()
 {
-    if (DistrhoPluginProM* const dspPtr = (DistrhoPluginProM*)d_getPluginInstancePointer())
+    if (DistrhoPluginProM* const dspPtr = (DistrhoPluginProM*)getPluginInstancePointer())
     {
         const MutexLocker csm(dspPtr->fMutex);
         dspPtr->fPM = nullptr;
@@ -64,21 +63,21 @@ DistrhoUIProM::~DistrhoUIProM()
 // -----------------------------------------------------------------------
 // DSP Callbacks
 
-void DistrhoUIProM::d_parameterChanged(uint32_t, float)
+void DistrhoUIProM::parameterChanged(uint32_t, float)
 {
 }
 
 // -----------------------------------------------------------------------
 // UI Callbacks
 
-void DistrhoUIProM::d_uiIdle()
+void DistrhoUIProM::uiIdle()
 {
     if (fPM == nullptr)
         return;
 
     repaint();
 
-    if (DistrhoPluginProM* const dspPtr = (DistrhoPluginProM*)d_getPluginInstancePointer())
+    if (DistrhoPluginProM* const dspPtr = (DistrhoPluginProM*)getPluginInstancePointer())
     {
         if (dspPtr->fPM != nullptr)
             return;
@@ -88,7 +87,7 @@ void DistrhoUIProM::d_uiIdle()
     }
 }
 
-void DistrhoUIProM::d_uiReshape(uint width, uint height)
+void DistrhoUIProM::uiReshape(uint width, uint height)
 {
     glEnable(GL_BLEND);
     glEnable(GL_LINE_SMOOTH);
