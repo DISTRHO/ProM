@@ -11,7 +11,7 @@ all: dgl plugins gen
 # --------------------------------------------------------------
 
 dgl:
-	$(MAKE) -C dpf/dgl
+	$(MAKE) -C dpf/dgl USE_OPENGL3=true
 
 plugins: dgl
 	$(MAKE) all -C plugins/ProM

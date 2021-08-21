@@ -139,8 +139,7 @@ BASE_FLAGS += -DSTDC_HEADERS=1
 # BASE_FLAGS += -DUSE_GLES=1
 BASE_FLAGS += -DUSE_THREADS=1
 # self-contained build
-# FIXME
-BASE_FLAGS += -DDATADIR_PATH='"./plugins/ProM/projectM/"'
+BASE_FLAGS += -DDATADIR_PATH='"."'
 # silence projectM warnings
 BASE_FLAGS += -Wno-constant-conversion
 BASE_FLAGS += -Wno-delete-non-abstract-non-virtual-dtor
@@ -152,7 +151,6 @@ BASE_FLAGS += -Wno-unused-variable
 # maybe maybe
 # projectm_mac
 # -fopenmp
-# -DPROJECTM_STATIC_DEFINE
 endif
 
 LINK_FLAGS += -lpthread
