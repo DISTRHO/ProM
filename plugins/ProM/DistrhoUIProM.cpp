@@ -32,6 +32,10 @@ DistrhoUIProM::DistrhoUIProM()
     // if (d_isNotZero(scaleFactor))
     //    setSize(512*scaleFactor, 512*scaleFactor)
     setGeometryConstraints(512, 512, true);
+
+    // no need to show resize handle if window is user-resizable
+    // if (isResizable())
+    //     fResizeHandle.hide();
 }
 
 DistrhoUIProM::~DistrhoUIProM()
