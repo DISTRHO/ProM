@@ -98,7 +98,7 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
 
     if (fPM == nullptr)
     {
-#ifdef PROJECTM_PREFIX
+#ifdef PROJECTM_DATA_DIR
         fPM = new projectM(PROJECTM_DATA_DIR "/config.inp");
 #else
         projectM::Settings settings;
@@ -167,13 +167,13 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
     {
         switch (ev.key)
         {
-        case DGL_NAMESPACE::kCharBackspace:
+        case DGL_NAMESPACE::kKeyBackspace:
             pmKey = PROJECTM_K_BACKSPACE;
             break;
-        case DGL_NAMESPACE::kCharEscape:
+        case DGL_NAMESPACE::kKeyEscape:
             pmKey = PROJECTM_K_ESCAPE;
             break;
-        case DGL_NAMESPACE::kCharDelete:
+        case DGL_NAMESPACE::kKeyDelete:
             pmKey = PROJECTM_K_DELETE;
             break;
         }

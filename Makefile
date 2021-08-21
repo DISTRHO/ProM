@@ -9,12 +9,23 @@ include dpf/Makefile.base.mk
 all: dgl plugins gen
 
 # --------------------------------------------------------------
+# Check for system-wide projectM
+
+HAVE_PROJECTM = $(shell pkg-config --exists libprojectM && echo true)
+
+# --------------------------------------------------------------
 
 dgl:
-	$(MAKE) -C dpf/dgl USE_OPENGL3=true
+	$(MAKE) -C dpf/dgl opengl USE_OPENGL3=true
 
 plugins: dgl
 	$(MAKE) all -C plugins/ProM
+
+ifneq ($(HAVE_PROJECTM),true)
+resources: plugins
+else
+resources:
+endif
 
 ifneq ($(CROSS_COMPILING),true)
 gen: plugins dpf/utils/lv2_ttl_generator
