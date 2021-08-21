@@ -38,20 +38,29 @@ static String getCurrentExecutableDataDir()
 
 #ifdef DISTRHO_OS_WINDOWS
     CHAR filename[MAX_PATH + 256];
-    filename[0] = 0;
+    filename[0] = '\0';
     GetModuleFileName(nullptr, filename, sizeof(filename));
 
     datadir = String(filename);
+    datadir.truncate(datadir.rfind('\\'));
 #else
     Dl_info info;
     dladdr((void*)getCurrentExecutableDataDir, &info);
 
     datadir = String(info.dli_fname);
+    datadir.truncate(datadir.rfind('/'));
 
-    bool hasSlash;
-    const std::size_t slashPos = datadir.rfind('/', &hasSlash);
-    if (hasSlash)
-        datadir.truncate(slashPos);
+# ifdef DISTRHO_OS_MAC
+    if (datadir.endsWith("/MacOS"))
+    {
+        datadir.truncate(datadir.rfind('/'));
+        datadir += "/Resources";
+    }
+    else
+# endif
+    {
+        datadir += "/resources";
+    }
 #endif
 
     return datadir;
@@ -147,10 +156,10 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
         d_stdout("ProM datadir: '%s'", datadir.buffer());
 
         projectM::Settings settings;
-        settings.presetURL    = datadir + "/resources/presets";
-        settings.titleFontURL = datadir + "/resources/fonts/Vera.ttf";
-        settings.menuFontURL  = datadir + "/resources/fonts/VeraMono.ttf";
-        settings.datadir      = datadir + "/resources";
+        settings.presetURL    = datadir + DISTRHO_OS_SEP_STR "presets";
+        settings.titleFontURL = datadir + DISTRHO_OS_SEP_STR "fonts" DISTRHO_OS_SEP_STR "Vera.ttf";
+        settings.menuFontURL  = datadir + DISTRHO_OS_SEP_STR "fonts" DISTRHO_OS_SEP_STR "VeraMono.ttf";
+        settings.datadir      = datadir;
         fPM = new projectM(settings);
 #endif
     }

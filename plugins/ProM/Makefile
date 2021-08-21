@@ -147,17 +147,18 @@ endif # WINDOWS
 # silence projectM warnings
 BASE_FLAGS += -Wno-ignored-qualifiers
 BASE_FLAGS += -Wno-implicit-fallthrough
-BASE_FLAGS += -Wno-maybe-uninitialized
 BASE_FLAGS += -Wno-overflow
 BASE_FLAGS += -Wno-shift-negative-value
 BASE_FLAGS += -Wno-sign-compare
-BASE_FLAGS += -Wno-unused-but-set-variable
 BASE_FLAGS += -Wno-unused-parameter
 BASE_FLAGS += -Wno-unused-variable
 ifeq ($(MACOS),true)
 BASE_FLAGS += -Wno-constant-conversion
 BASE_FLAGS += -Wno-delete-non-abstract-non-virtual-dtor
 BASE_FLAGS += -Wno-mismatched-tags
+else
+BASE_FLAGS += -Wno-maybe-uninitialized
+BASE_FLAGS += -Wno-unused-but-set-variable
 endif # MACOS
 ifeq ($(WINDOWS),true)
 BASE_FLAGS += -Wno-cast-function-type
@@ -182,6 +183,7 @@ endif
 
 endif # HAVE_PROJECTM
 
+# FIXME check if needed on windows
 LINK_FLAGS += -lpthread
 
 # --------------------------------------------------------------

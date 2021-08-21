@@ -22,7 +22,7 @@ plugins: dgl
 	$(MAKE) all -C plugins/ProM
 
 ifneq ($(HAVE_PROJECTM),true)
-resources: plugins
+resources: gen
 	# LV2 fonts
 	install -d bin/ProM.lv2/resources/fonts
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.lv2/resources/fonts/
@@ -30,7 +30,12 @@ resources: plugins
 	install -d bin/ProM.lv2/resources/presets
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.lv2/resources/presets/
 ifeq ($(MACOS),true)
-# TODO
+	# VST fonts
+	install -d bin/ProM.vst/Contents/Resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/Contents/Resources/fonts/
+	# VST presets
+	install -d bin/ProM.vst/Contents/Resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/Contents/Resources/presets/
 else
 	# VST directory
 	install -d bin/ProM.vst
