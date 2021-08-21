@@ -24,8 +24,14 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------
 
 DistrhoUIProM::DistrhoUIProM()
-    : UI(512, 512)
+    : UI(512, 512),
+      fPM(nullptr),
+      fResizeHandle(this)
 {
+    // const double scaleFactor = getScaleFactor();
+    // if (d_isNotZero(scaleFactor))
+    //    setSize(512*scaleFactor, 512*scaleFactor)
+    setGeometryConstraints(512, 512, true);
 }
 
 DistrhoUIProM::~DistrhoUIProM()
@@ -99,7 +105,7 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
         settings.presetURL    = "./plugins/ProM/projectM/presets";
         settings.titleFontURL = "fonts/Vera.ttf";
         settings.menuFontURL  = "fonts/VeraMono.ttf";
-        // settings.datadir      = "./plugins/ProM/projectM/";
+        settings.datadir      = "./plugins/ProM/projectM";
         fPM = new projectM(settings);
 #endif
     }
