@@ -19,9 +19,7 @@
 
 #include "libprojectM/projectM.hpp"
 
-#ifdef DISTRHO_OS_WINDOWS
-# include <shlobj.h>
-#else
+#ifndef DISTRHO_OS_WINDOWS
 # include <dlfcn.h>
 #endif
 
