@@ -1,6 +1,6 @@
 /*
  * DISTRHO ProM Plugin
- * Copyright (C) 2015 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2015-2021 Filipe Coelho <falktx@falktx.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,29 +20,6 @@
 #include "libprojectM/projectM.hpp"
 
 START_NAMESPACE_DISTRHO
-
-// -----------------------------------------------------------------------
-
-#if 0
-static const projectM::Settings kSettings = {
-    /* meshX        */ 32,
-    /* meshY        */ 24,
-    /* fps          */ 35,
-    /* textureSize  */ 1024,
-    /* windowWidth  */ 512,
-    /* windowHeight */ 512,
-    /* presetURL    */ "/usr/share/projectM/presets",
-    /* titleFontURL */ "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf",
-    /* menuFontURL  */ "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSansMono.ttf",
-    /* smoothPresetDuration  */ 5,
-    /* presetDuration        */ 30,
-    /* beatSensitivity       */ 10.0f,
-    /* aspectCorrection      */ true,
-    /* easterEgg             */ 1.0f,
-    /* shuffleEnabled        */ true,
-    /* softCutRatingsEnabled */ false
-};
-#endif
 
 // -----------------------------------------------------------------------
 
@@ -114,8 +91,18 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
     glLineStipple(2, 0xAAAA);
 
     if (fPM == nullptr)
-        //fPM = new projectM(kSettings);
-        fPM = new projectM("/usr/share/projectM/config.inp");
+    {
+#ifdef PROJECTM_PREFIX
+        fPM = new projectM(PROJECTM_DATA_DIR "/config.inp");
+#else
+        projectM::Settings settings;
+        settings.presetURL    = "./plugins/ProM/projectM/presets";
+        settings.titleFontURL = "./plugins/ProM/projectM/fonts/Vera.ttf";
+        settings.menuFontURL  = "./plugins/ProM/projectM/fonts/VeraMono.ttf";
+        settings.datadir      = "./plugins/ProM/projectM/";
+        fPM = new projectM(settings);
+#endif
+    }
 
     fPM->projectM_resetGL(width, height);
 }

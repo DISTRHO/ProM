@@ -1,3 +1,6 @@
 [submodule "dpf"]
 	path = dpf
 	url = https://github.com/DISTRHO/DPF
+[submodule "plugins/ProM/projectM"]
+	path = plugins/ProM/projectM
+	url = https://github.com/projectM-visualizer/projectm.git

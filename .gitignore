@@ -1,6 +1,7 @@
 *.a
 *.d
 *.o
+.DS_Store
 
 *.exe
 *.dll
