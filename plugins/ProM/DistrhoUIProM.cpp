@@ -102,10 +102,10 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
         fPM = new projectM(PROJECTM_DATA_DIR "/config.inp");
 #else
         projectM::Settings settings;
-        settings.presetURL    = "./plugins/ProM/projectM/presets";
+        settings.presetURL    = "/Users/falktx/Source/ProM/plugins/ProM/projectM/presets";
         settings.titleFontURL = "fonts/Vera.ttf";
         settings.menuFontURL  = "fonts/VeraMono.ttf";
-        settings.datadir      = "./plugins/ProM/projectM";
+        settings.datadir      = "/Users/falktx/Source/ProM/plugins/ProM/projectM";
         fPM = new projectM(settings);
 #endif
     }
