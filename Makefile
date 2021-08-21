@@ -6,7 +6,7 @@
 
 include dpf/Makefile.base.mk
 
-all: dgl plugins gen
+all: dgl plugins resources gen
 
 # --------------------------------------------------------------
 # Check for system-wide projectM
@@ -23,6 +23,25 @@ plugins: dgl
 
 ifneq ($(HAVE_PROJECTM),true)
 resources: plugins
+	# LV2 fonts
+	install -d bin/ProM.lv2/resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.lv2/resources/fonts/
+	# LV2 presets
+	install -d bin/ProM.lv2/resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.lv2/resources/presets/
+ifeq ($(MACOS),true)
+# TODO
+else
+	# VST directory
+	install -d bin/ProM.vst
+	mv bin/ProM-vst$(LIB_EXT) bin/ProM.vst/ProM$(LIB_EXT)
+	# VST fonts
+	install -d bin/ProM.vst/resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/resources/fonts/
+	# VST presets
+	install -d bin/ProM.vst/resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/resources/presets/
+endif
 else
 resources:
 endif

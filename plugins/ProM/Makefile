@@ -24,6 +24,11 @@ FILES_UI  = \
 HAVE_PROJECTM = $(shell pkg-config --exists libprojectM && echo true)
 
 # --------------------------------------------------------------
+# Import base definitions
+
+include ../../dpf/Makefile.base.mk
+
+# --------------------------------------------------------------
 # Use local copy if needed
 
 ifneq ($(HAVE_PROJECTM),true)
@@ -90,7 +95,12 @@ FILES_UI += \
 	projectM/src/libprojectM/Renderer/SOIL2/image_DXT.c \
 	projectM/src/libprojectM/Renderer/SOIL2/etc1_utils.c \
 	projectM/src/libprojectM/Renderer/SOIL2/image_helper.c
-endif
+ifeq ($(WINDOWS),true)
+FILES_UI += \
+	projectM/msvc/dlfcn.c \
+	projectM/msvc/GL/glew.c
+endif # WINDOWS
+endif # !HAVE_PROJECTM
 
 # --------------------------------------------------------------
 # Do some magic
@@ -101,12 +111,27 @@ include ../../dpf/Makefile.plugins.mk
 # Extra flags
 
 ifeq ($(HAVE_PROJECTM),true)
+
 BASE_FLAGS += -DPROJECTM_DATA_DIR='"$(shell pkg-config --variable=pkgdatadir libprojectM)"'
 BASE_FLAGS += $(shell pkg-config --cflags libprojectM)
 LINK_FLAGS += $(shell pkg-config --libs libprojectM)
+
 else # HAVE_PROJECTM
+
 # compiler macros
+BASE_FLAGS += -DUSE_TEXT_MENU
+ifeq ($(WINDOWS),true)
+BASE_FLAGS += -DDLLEXPORT=
+BASE_FLAGS += -DprojectM_FONT_TITLE='"fonts/Vera.tff"'
+BASE_FLAGS += -DprojectM_FONT_MENU='"fonts/VeraMono.ttf"'
+BASE_FLAGS += -DSTBI_NO_DDS
+# these below do nothing
+BASE_FLAGS += -DUSE_FTGL
+BASE_FLAGS += -DUSE_NATIVE_GLEW
+else # WINDOWS
 BASE_FLAGS += -DDATADIR_PATH='"."'
+endif # WINDOWS
+
 # include dirs
 BASE_FLAGS += -IprojectM/src
 BASE_FLAGS += -IprojectM/src/libprojectM
@@ -115,6 +140,10 @@ BASE_FLAGS += -IprojectM/src/libprojectM/Renderer/hlslparser/src
 BASE_FLAGS += -IprojectM/src/libprojectM/MilkdropPresetFactory
 BASE_FLAGS += -IprojectM/src/libprojectM/NativePresetFactory
 BASE_FLAGS += -IprojectM/vendor
+ifeq ($(WINDOWS),true)
+BASE_FLAGS += -IprojectM/msvc
+endif # WINDOWS
+
 # silence projectM warnings
 BASE_FLAGS += -Wno-ignored-qualifiers
 BASE_FLAGS += -Wno-implicit-fallthrough
@@ -129,7 +158,12 @@ ifeq ($(MACOS),true)
 BASE_FLAGS += -Wno-constant-conversion
 BASE_FLAGS += -Wno-delete-non-abstract-non-virtual-dtor
 BASE_FLAGS += -Wno-mismatched-tags
-endif
+endif # MACOS
+ifeq ($(WINDOWS),true)
+BASE_FLAGS += -Wno-cast-function-type
+BASE_FLAGS += -Wno-unknown-pragmas
+endif # WIN32
+
 # openmp (optional)
 ifeq ($(DISABLE_OPENMP),)
 ifneq ($(MACOS),true)
@@ -137,10 +171,15 @@ CUSTOM_BUILD_FLAGS += -D_OPENMP -fopenmp
 CUSTOM_LINK_FLAGS  += -fopenmp
 endif # MACOS
 endif # DISABLE_OPENMP
+
 # extra linker flags
 ifneq ($(HAIKU_OR_MACOS_OR_WINDOWS),true)
 LINK_FLAGS += -ldl
-endif # HAIKU_OR_MACOS_OR_WINDOWS
+endif
+ifeq ($(WINDOWS),true)
+LINK_FLAGS += -lpsapi
+endif
+
 endif # HAVE_PROJECTM
 
 LINK_FLAGS += -lpthread

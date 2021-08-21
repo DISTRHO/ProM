@@ -19,7 +19,43 @@
 
 #include "libprojectM/projectM.hpp"
 
+#ifdef DISTRHO_OS_WINDOWS
+# include <shlobj.h>
+#else
+# include <dlfcn.h>
+#endif
+
 START_NAMESPACE_DISTRHO
+
+// -----------------------------------------------------------------------
+
+static String getCurrentExecutableDataDir()
+{
+    static String datadir;
+
+    if (datadir.isNotEmpty())
+        return datadir;
+
+#ifdef DISTRHO_OS_WINDOWS
+    CHAR filename[MAX_PATH + 256];
+    filename[0] = 0;
+    GetModuleFileName(nullptr, filename, sizeof(filename));
+
+    datadir = String(filename);
+#else
+    Dl_info info;
+    dladdr((void*)getCurrentExecutableDataDir, &info);
+
+    datadir = String(info.dli_fname);
+
+    bool hasSlash;
+    const std::size_t slashPos = datadir.rfind('/', &hasSlash);
+    if (hasSlash)
+        datadir.truncate(slashPos);
+#endif
+
+    return datadir;
+}
 
 // -----------------------------------------------------------------------
 
@@ -76,6 +112,7 @@ void DistrhoUIProM::uiIdle()
 
 void DistrhoUIProM::uiReshape(uint width, uint height)
 {
+#if 0
     glEnable(GL_BLEND);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POINT_SMOOTH);
@@ -99,17 +136,21 @@ void DistrhoUIProM::uiReshape(uint width, uint height)
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glLineStipple(2, 0xAAAA);
+#endif
 
     if (fPM == nullptr)
     {
 #ifdef PROJECTM_DATA_DIR
         fPM = new projectM(PROJECTM_DATA_DIR "/config.inp");
 #else
+        const String datadir(getCurrentExecutableDataDir());
+        d_stdout("ProM datadir: '%s'", datadir.buffer());
+
         projectM::Settings settings;
-        settings.presetURL    = "/Users/falktx/Source/ProM/plugins/ProM/projectM/presets";
-        settings.titleFontURL = "fonts/Vera.ttf";
-        settings.menuFontURL  = "fonts/VeraMono.ttf";
-        settings.datadir      = "/Users/falktx/Source/ProM/plugins/ProM/projectM";
+        settings.presetURL    = datadir + "/resources/presets";
+        settings.titleFontURL = datadir + "/resources/fonts/Vera.ttf";
+        settings.menuFontURL  = datadir + "/resources/fonts/VeraMono.ttf";
+        settings.datadir      = datadir + "/resources";
         fPM = new projectM(settings);
 #endif
     }

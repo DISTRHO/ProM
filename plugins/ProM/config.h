@@ -17,7 +17,6 @@
 #pragma once
 
 #define HAVE_ALIGNED_ALLOC 1
-#define HAVE_DLFCN_H 1
 #define HAVE_FTS_H 1
 #define HAVE_GL 1
 #define HAVE_GL_GL_H 1
@@ -33,9 +32,14 @@
 #define HAVE_SYS_STAT_H 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_UNISTD_H 1
-#define HAVE_WINDOWS_H 1
 #define STDC_HEADERS 1
 #define USE_THREADS 1
+
+#define HAVE_DLFCN_H 1
+
+#ifdef WIN32
+# define HAVE_WINDOWS_H 1
+#endif
 
 // GLES stuff
 /*
