@@ -23,6 +23,18 @@
 # include <dlfcn.h>
 #endif
 
+#ifdef DISTRHO_OS_WINDOWS
+static HINSTANCE hInstance = nullptr;
+
+DISTRHO_PLUGIN_EXPORT
+BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
+{
+    if (reason == DLL_PROCESS_ATTACH)
+        hInstance = hInst;
+    return 1;
+}
+#endif
+
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
@@ -37,7 +49,7 @@ static String getCurrentExecutableDataDir()
 #ifdef DISTRHO_OS_WINDOWS
     CHAR filename[MAX_PATH + 256];
     filename[0] = '\0';
-    GetModuleFileName(nullptr, filename, sizeof(filename));
+    GetModuleFileName(hInstance, filename, sizeof(filename));
 
     datadir = String(filename);
     datadir.truncate(datadir.rfind('\\'));
