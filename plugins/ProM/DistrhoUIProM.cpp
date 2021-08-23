@@ -131,32 +131,6 @@ void DistrhoUIProM::uiIdle()
 
 void DistrhoUIProM::uiReshape(uint width, uint height)
 {
-#if 0
-    glEnable(GL_BLEND);
-    glEnable(GL_LINE_SMOOTH);
-    glEnable(GL_POINT_SMOOTH);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_SMOOTH);
-
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, width, height, 0, 0.0f, 1.0f);
-    glViewport(0, 0, width, height);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glDrawBuffer(GL_BACK);
-    glReadBuffer(GL_BACK);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glLineStipple(2, 0xAAAA);
-#endif
-
     if (fPM == nullptr)
     {
 #ifdef PROJECTM_DATA_DIR
@@ -188,11 +162,86 @@ void DistrhoUIProM::onDisplay()
     fPM->renderFrame();
 }
 
+static projectMKeycode dgl2pmkey(const DGL_NAMESPACE::Key key) noexcept
+{
+    switch (key)
+    {
+    case DGL_NAMESPACE::kKeyBackspace:
+        return PROJECTM_K_BACKSPACE;
+    case DGL_NAMESPACE::kKeyEscape:
+        return PROJECTM_K_ESCAPE;
+    case DGL_NAMESPACE::kKeyDelete:
+        return PROJECTM_K_DELETE;
+    case DGL_NAMESPACE::kKeyF1:
+        return PROJECTM_K_F1;
+    case DGL_NAMESPACE::kKeyF2:
+        return PROJECTM_K_F2;
+    case DGL_NAMESPACE::kKeyF3:
+        return PROJECTM_K_F3;
+    case DGL_NAMESPACE::kKeyF4:
+        return PROJECTM_K_F4;
+    case DGL_NAMESPACE::kKeyF5:
+        return PROJECTM_K_F5;
+    case DGL_NAMESPACE::kKeyF6:
+        return PROJECTM_K_F6;
+    case DGL_NAMESPACE::kKeyF7:
+        return PROJECTM_K_F7;
+    case DGL_NAMESPACE::kKeyF8:
+        return PROJECTM_K_F8;
+    case DGL_NAMESPACE::kKeyF9:
+        return PROJECTM_K_F9;
+    case DGL_NAMESPACE::kKeyF10:
+        return PROJECTM_K_F10;
+    case DGL_NAMESPACE::kKeyF11:
+        return PROJECTM_K_F11;
+    case DGL_NAMESPACE::kKeyF12:
+        return PROJECTM_K_F12;
+    case DGL_NAMESPACE::kKeyLeft:
+        return PROJECTM_K_LEFT;
+    case DGL_NAMESPACE::kKeyUp:
+        return PROJECTM_K_UP;
+    case DGL_NAMESPACE::kKeyRight:
+        return PROJECTM_K_RIGHT;
+    case DGL_NAMESPACE::kKeyDown:
+        return PROJECTM_K_DOWN;
+    case DGL_NAMESPACE::kKeyPageUp:
+        return PROJECTM_K_PAGEUP;
+    case DGL_NAMESPACE::kKeyPageDown:
+        return PROJECTM_K_PAGEDOWN;
+    case DGL_NAMESPACE::kKeyHome:
+        return PROJECTM_K_HOME;
+    case DGL_NAMESPACE::kKeyEnd:
+        return PROJECTM_K_END;
+    case DGL_NAMESPACE::kKeyInsert:
+        return PROJECTM_K_INSERT;
+    case DGL_NAMESPACE::kKeyShiftL:
+        return PROJECTM_K_LSHIFT;
+    case DGL_NAMESPACE::kKeyShiftR:
+        return PROJECTM_K_RSHIFT;
+    case DGL_NAMESPACE::kKeyControlL:
+        return PROJECTM_K_LCTRL;
+    case DGL_NAMESPACE::kKeyControlR:
+    case DGL_NAMESPACE::kKeyAltL:
+    case DGL_NAMESPACE::kKeyAltR:
+    case DGL_NAMESPACE::kKeySuperL:
+    case DGL_NAMESPACE::kKeySuperR:
+    case DGL_NAMESPACE::kKeyMenu:
+    case DGL_NAMESPACE::kKeyCapsLock:
+    case DGL_NAMESPACE::kKeyScrollLock:
+    case DGL_NAMESPACE::kKeyNumLock:
+    case DGL_NAMESPACE::kKeyPrintScreen:
+    case DGL_NAMESPACE::kKeyPause:
+    default:
+        return PROJECTM_K_NONE;
+    }
+}
+
 bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
 {
     if (fPM == nullptr)
         return false;
 
+#if 0
     if (ev.press && (ev.key == '1' || ev.key == '+' || ev.key == '-'))
     {
         if (ev.key == '1')
@@ -217,40 +266,28 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
 
         return true;
     }
+#endif
 
-    projectMKeycode  pmKey = PROJECTM_K_NONE;
-    projectMModifier pmMod = PROJECTM_KMOD_LSHIFT;
+    projectMKeycode pmKey = PROJECTM_K_NONE;
 
     if ((ev.key >= PROJECTM_K_0 && ev.key <= PROJECTM_K_9) ||
         (ev.key >= PROJECTM_K_A && ev.key <= PROJECTM_K_Z) ||
         (ev.key >= PROJECTM_K_a && ev.key <= PROJECTM_K_z))
     {
         pmKey = static_cast<projectMKeycode>(ev.key);
+
+        if (ev.mod & DGL_NAMESPACE::kModifierShift)
+            pmKey = static_cast<projectMKeycode>(pmKey + (PROJECTM_K_a - PROJECTM_K_A));
     }
     else
     {
-        switch (ev.key)
-        {
-        case DGL_NAMESPACE::kKeyBackspace:
-            pmKey = PROJECTM_K_BACKSPACE;
-            break;
-        case DGL_NAMESPACE::kKeyEscape:
-            pmKey = PROJECTM_K_ESCAPE;
-            break;
-        case DGL_NAMESPACE::kKeyDelete:
-            pmKey = PROJECTM_K_DELETE;
-            break;
-        }
+        pmKey = dgl2pmkey(static_cast<DGL_NAMESPACE::Key>(ev.key));
     }
 
     if (pmKey == PROJECTM_K_NONE)
         return false;
 
-    if (ev.mod & DGL_NAMESPACE::kModifierControl)
-        pmMod = PROJECTM_KMOD_LCTRL;
-
-    fPM->key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
-
+    fPM->default_key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey);
     return true;
 }
 
@@ -259,93 +296,12 @@ bool DistrhoUIProM::onSpecial(const SpecialEvent& ev)
     if (fPM == nullptr)
         return false;
 
-    projectMKeycode  pmKey = PROJECTM_K_NONE;
-    projectMModifier pmMod = PROJECTM_KMOD_LSHIFT;
-
-    switch (ev.key)
-    {
-    case DGL_NAMESPACE::kKeyF1:
-        pmKey = PROJECTM_K_F1;
-        break;
-    case DGL_NAMESPACE::kKeyF2:
-        pmKey = PROJECTM_K_F2;
-        break;
-    case DGL_NAMESPACE::kKeyF3:
-        pmKey = PROJECTM_K_F3;
-        break;
-    case DGL_NAMESPACE::kKeyF4:
-        pmKey = PROJECTM_K_F4;
-        break;
-    case DGL_NAMESPACE::kKeyF5:
-        pmKey = PROJECTM_K_F5;
-        break;
-    case DGL_NAMESPACE::kKeyF6:
-        pmKey = PROJECTM_K_F6;
-        break;
-    case DGL_NAMESPACE::kKeyF7:
-        pmKey = PROJECTM_K_F7;
-        break;
-    case DGL_NAMESPACE::kKeyF8:
-        pmKey = PROJECTM_K_F8;
-        break;
-    case DGL_NAMESPACE::kKeyF9:
-        pmKey = PROJECTM_K_F9;
-        break;
-    case DGL_NAMESPACE::kKeyF10:
-        pmKey = PROJECTM_K_F10;
-        break;
-    case DGL_NAMESPACE::kKeyF11:
-        pmKey = PROJECTM_K_F11;
-        break;
-    case DGL_NAMESPACE::kKeyF12:
-        pmKey = PROJECTM_K_F12;
-        break;
-    case DGL_NAMESPACE::kKeyLeft:
-        pmKey = PROJECTM_K_LEFT;
-        break;
-    case DGL_NAMESPACE::kKeyUp:
-        pmKey = PROJECTM_K_UP;
-        break;
-    case DGL_NAMESPACE::kKeyRight:
-        pmKey = PROJECTM_K_RIGHT;
-        break;
-    case DGL_NAMESPACE::kKeyDown:
-        pmKey = PROJECTM_K_DOWN;
-        break;
-    case DGL_NAMESPACE::kKeyPageUp:
-        pmKey = PROJECTM_K_PAGEUP;
-        break;
-    case DGL_NAMESPACE::kKeyPageDown:
-        pmKey = PROJECTM_K_PAGEDOWN;
-        break;
-    case DGL_NAMESPACE::kKeyHome:
-        pmKey = PROJECTM_K_HOME;
-        break;
-    case DGL_NAMESPACE::kKeyEnd:
-        pmKey = PROJECTM_K_END;
-        break;
-    case DGL_NAMESPACE::kKeyInsert:
-        pmKey = PROJECTM_K_INSERT;
-        break;
-    case DGL_NAMESPACE::kKeyShift:
-        pmKey = PROJECTM_K_LSHIFT;
-        break;
-    case DGL_NAMESPACE::kKeyControl:
-        pmKey = PROJECTM_K_LCTRL;
-        break;
-    case DGL_NAMESPACE::kKeyAlt:
-    case DGL_NAMESPACE::kKeySuper:
-        break;
-    }
+    const projectMKeycode pmKey = dgl2pmkey(ev.key);
 
     if (pmKey == PROJECTM_K_NONE)
         return false;
 
-    if (ev.mod & DGL_NAMESPACE::kModifierControl)
-        pmMod = PROJECTM_KMOD_LCTRL;
-
-    fPM->key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey, pmMod);
-
+    fPM->default_key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey);
     return true;
 }
 
