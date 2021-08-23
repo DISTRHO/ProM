@@ -128,6 +128,7 @@ BASE_FLAGS += -DUSE_THREADS
 # Experimental
 # BASE_FLAGS += -DHAVE_LLVM=1
 ifeq ($(WINDOWS),true)
+BASE_FLAGS += -Daligned_alloc=_aligned_malloc
 BASE_FLAGS += -DDLLEXPORT=
 BASE_FLAGS += -DprojectM_FONT_TITLE='"fonts/Vera.tff"'
 BASE_FLAGS += -DprojectM_FONT_MENU='"fonts/VeraMono.ttf"'
