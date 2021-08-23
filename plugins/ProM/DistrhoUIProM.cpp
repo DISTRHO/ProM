@@ -231,9 +231,10 @@ static projectMKeycode dgl2pmkey(const DGL_NAMESPACE::Key key) noexcept
     case DGL_NAMESPACE::kKeyNumLock:
     case DGL_NAMESPACE::kKeyPrintScreen:
     case DGL_NAMESPACE::kKeyPause:
-    default:
-        return PROJECTM_K_NONE;
+        break;
     }
+
+    return PROJECTM_K_NONE;
 }
 
 bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
@@ -268,11 +269,32 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
     }
 #endif
 
+    // special handling for text
+    if (fPM->isTextInputActive(true) && !ev.press)
+    {
+        if (ev.key >= ' ' && ev.key <= 'z')
+        {
+            std::string key;
+            key += static_cast<char>(ev.key);
+            fPM->setSearchText(key);
+            return true;
+        }
+        else if (ev.key == DGL_NAMESPACE::kKeyBackspace)
+        {
+            fPM->deleteSearchText();
+            return true;
+        }
+    }
+
     projectMKeycode pmKey = PROJECTM_K_NONE;
 
-    if ((ev.key >= PROJECTM_K_0 && ev.key <= PROJECTM_K_9) ||
-        (ev.key >= PROJECTM_K_A && ev.key <= PROJECTM_K_Z) ||
-        (ev.key >= PROJECTM_K_a && ev.key <= PROJECTM_K_z))
+    if (ev.key >= kKeyF1)
+    {
+        pmKey = dgl2pmkey(static_cast<DGL_NAMESPACE::Key>(ev.key));
+    }
+    else if ((ev.key >= PROJECTM_K_0 && ev.key <= PROJECTM_K_9) ||
+             (ev.key >= PROJECTM_K_A && ev.key <= PROJECTM_K_Z) ||
+             (ev.key >= PROJECTM_K_a && ev.key <= PROJECTM_K_z))
     {
         pmKey = static_cast<projectMKeycode>(ev.key);
 
@@ -281,7 +303,42 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
     }
     else
     {
-        pmKey = dgl2pmkey(static_cast<DGL_NAMESPACE::Key>(ev.key));
+        /* missing:
+         * PROJECTM_K_CAPSLOCK
+         */
+        switch (ev.key)
+        {
+        case DGL_NAMESPACE::kKeyBackspace:
+            pmKey = PROJECTM_K_BACKSPACE;
+            break;
+        case DGL_NAMESPACE::kKeyEscape:
+            pmKey = PROJECTM_K_ESCAPE;
+            break;
+        case DGL_NAMESPACE::kKeyDelete:
+            pmKey = PROJECTM_K_DELETE;
+            break;
+        case '\r':
+            pmKey = PROJECTM_K_RETURN;
+            break;
+        case '/':
+            pmKey = PROJECTM_K_SLASH;
+            break;
+        case '\\':
+            pmKey = PROJECTM_K_BACKSLASH;
+            break;
+        case '+':
+            pmKey = PROJECTM_K_PLUS;
+            break;
+        case '-':
+            pmKey = PROJECTM_K_MINUS;
+            break;
+        case '=':
+            pmKey = PROJECTM_K_EQUALS;
+            break;
+        default:
+            // d_stdout("Unhandled key %u %u %c", ev.keycode, ev.key, ev.key);
+            break;
+        }
     }
 
     if (pmKey == PROJECTM_K_NONE)
