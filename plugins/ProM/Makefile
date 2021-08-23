@@ -119,17 +119,22 @@ LINK_FLAGS += $(shell pkg-config --libs libprojectM)
 else # HAVE_PROJECTM
 
 # compiler macros
+BASE_FLAGS += -DHAVE_ALIGNED_ALLOC=1
+BASE_FLAGS += -DHAVE_POSIX_MEMALIGN=1
 BASE_FLAGS += -DUSE_TEXT_MENU
+BASE_FLAGS += -DUSE_THREADS
+# GLES stuff
+# BASE_FLAGS += -DUSE_GLES=1
+# Experimental
+# BASE_FLAGS += -DHAVE_LLVM=1
 ifeq ($(WINDOWS),true)
 BASE_FLAGS += -DDLLEXPORT=
 BASE_FLAGS += -DprojectM_FONT_TITLE='"fonts/Vera.tff"'
 BASE_FLAGS += -DprojectM_FONT_MENU='"fonts/VeraMono.ttf"'
 BASE_FLAGS += -DSTBI_NO_DDS
-# these below do nothing
-BASE_FLAGS += -DUSE_FTGL
-BASE_FLAGS += -DUSE_NATIVE_GLEW
 else # WINDOWS
 BASE_FLAGS += -DDATADIR_PATH='"."'
+BASE_FLAGS += -DHAVE_FTS_H
 endif # WINDOWS
 
 # include dirs
