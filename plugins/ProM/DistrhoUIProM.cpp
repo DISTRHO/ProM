@@ -298,7 +298,7 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
     {
         pmKey = static_cast<projectMKeycode>(ev.key);
 
-        if (ev.mod & DGL_NAMESPACE::kModifierShift)
+        if (ev.key >= PROJECTM_K_A && ev.key <= PROJECTM_K_Z && (ev.mod & DGL_NAMESPACE::kModifierShift))
             pmKey = static_cast<projectMKeycode>(pmKey + (PROJECTM_K_a - PROJECTM_K_A));
     }
     else
