@@ -14,10 +14,11 @@
  * For a full copy of the license see the LICENSE file.
  */
 
+#include "libprojectM/projectM-opengl.h"
+#include "libprojectM/projectM.hpp"
+
 #include "DistrhoPluginProM.hpp"
 #include "DistrhoUIProM.hpp"
-
-#include "libprojectM/projectM.hpp"
 
 #ifndef DISTRHO_OS_WINDOWS
 # include <dlfcn.h>
