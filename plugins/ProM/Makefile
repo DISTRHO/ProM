@@ -170,7 +170,7 @@ BASE_FLAGS += -Wno-cast-function-type
 BASE_FLAGS += -Wno-unknown-pragmas
 else
 BASE_FLAGS += -Wno-unused-function
-endif # WIN32
+endif # WINDOWS
 
 # openmp (optional)
 ifeq ($(DISABLE_OPENMP),)

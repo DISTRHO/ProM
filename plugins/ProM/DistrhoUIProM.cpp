@@ -68,10 +68,10 @@ static String getCurrentExecutableDataDir()
     }
     else
 # endif
+#endif
     {
         datadir += "/resources";
     }
-#endif
 
     return datadir;
 }
