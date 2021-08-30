@@ -16,7 +16,7 @@ HAVE_PROJECTM = $(shell pkg-config --exists libprojectM && echo true)
 # --------------------------------------------------------------
 
 dgl:
-	$(MAKE) -C dpf/dgl opengl USE_OPENGL3=true
+	$(MAKE) -C dpf/dgl opengl
 
 plugins: dgl
 	$(MAKE) all -C plugins/ProM
