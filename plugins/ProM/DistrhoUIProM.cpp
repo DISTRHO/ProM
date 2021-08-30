@@ -86,7 +86,7 @@ DistrhoUIProM::DistrhoUIProM()
     // const double scaleFactor = getScaleFactor();
     // if (d_isNotZero(scaleFactor))
     //    setSize(512*scaleFactor, 512*scaleFactor)
-    setGeometryConstraints(512, 512, true);
+    setGeometryConstraints(256, 256, true);
 
     // no need to show resize handle if window is user-resizable
     // if (isResizable())
@@ -131,6 +131,8 @@ void DistrhoUIProM::uiIdle()
 
 void DistrhoUIProM::uiReshape(uint width, uint height)
 {
+    UI::uiReshape(width, height);
+
     if (fPM == nullptr)
     {
 #ifdef PROJECTM_DATA_DIR
@@ -160,6 +162,9 @@ void DistrhoUIProM::onDisplay()
         return;
 
     fPM->renderFrame();
+
+    // turn off shaders at the end of the drawing cycle, so other things can draw properly
+    glUseProgram(0);
 }
 
 static projectMKeycode dgl2pmkey(const DGL_NAMESPACE::Key key) noexcept
