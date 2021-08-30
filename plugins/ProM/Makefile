@@ -190,13 +190,11 @@ endif
 
 endif # HAVE_PROJECTM
 
-# FIXME check if needed on windows
 LINK_FLAGS += -lpthread
 
 # --------------------------------------------------------------
 # Enable all possible plugin types
 
-TARGETS += jack
 TARGETS += lv2
 TARGETS += vst
 
