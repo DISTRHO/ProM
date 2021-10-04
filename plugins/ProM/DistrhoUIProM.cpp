@@ -69,6 +69,12 @@ static String getCurrentExecutableDataDir()
     }
     else
 # endif
+    if (datadir.endsWith("/x86_64-linux"))
+    {
+        datadir.truncate(datadir.rfind('/'));
+        datadir += "/Resources";
+    }
+    else
 #endif
     {
         datadir += "/resources";
@@ -251,33 +257,6 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
     if (fPM == nullptr)
         return false;
 
-#if 0
-    if (ev.press && (ev.key == '1' || ev.key == '+' || ev.key == '-'))
-    {
-        if (ev.key == '1')
-        {
-            if (getWidth() != 512 || getHeight() != 512)
-                setSize(512, 512);
-        }
-        else if (ev.key == '+')
-        {
-            /**/ if (getWidth() < 1100 && getHeight() < 1100)
-                setSize(getWidth()+100, getHeight()+100);
-            else if (getWidth() != 1100 || getHeight() != 1100)
-                    setSize(1100, 1100);
-        }
-        else if (ev.key == '-')
-        {
-            /**/ if (getWidth() >= 200 && getHeight() >= 200)
-                setSize(getWidth()-100, getHeight()-100);
-            else if (getWidth() != 100 || getHeight() != 100)
-                setSize(100, 100);
-        }
-
-        return true;
-    }
-#endif
-
     // special handling for text
     if (fPM->isTextInputActive(true) && !ev.press)
     {
@@ -349,20 +328,6 @@ bool DistrhoUIProM::onKeyboard(const KeyboardEvent& ev)
             break;
         }
     }
-
-    if (pmKey == PROJECTM_K_NONE)
-        return false;
-
-    fPM->default_key_handler(ev.press ? PROJECTM_KEYUP : PROJECTM_KEYDOWN, pmKey);
-    return true;
-}
-
-bool DistrhoUIProM::onSpecial(const SpecialEvent& ev)
-{
-    if (fPM == nullptr)
-        return false;
-
-    const projectMKeycode pmKey = dgl2pmkey(ev.key);
 
     if (pmKey == PROJECTM_K_NONE)
         return false;

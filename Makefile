@@ -29,24 +29,32 @@ resources: gen
 	# LV2 presets
 	install -d bin/ProM.lv2/resources/presets
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.lv2/resources/presets/
+
 ifeq ($(MACOS),true)
-	# VST fonts
+	# VST2 fonts
 	install -d bin/ProM.vst/Contents/Resources/fonts
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/Contents/Resources/fonts/
-	# VST presets
+	# VST2 presets
 	install -d bin/ProM.vst/Contents/Resources/presets
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/Contents/Resources/presets/
 else
-	# VST directory
+	# VST2 directory
 	install -d bin/ProM.vst
 	mv bin/ProM-vst$(LIB_EXT) bin/ProM.vst/ProM$(LIB_EXT)
-	# VST fonts
+	# VST2 fonts
 	install -d bin/ProM.vst/resources/fonts
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/resources/fonts/
-	# VST presets
+	# VST2 presets
 	install -d bin/ProM.vst/resources/presets
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/resources/presets/
 endif
+
+	# VST3 fonts
+	install -d bin/ProM.vst3/Contents/Resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst3/Contents/Resources/fonts/
+	# VST3 presets
+	install -d bin/ProM.vst3/Contents/Resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst3/Contents/Resources/presets/
 else
 resources:
 endif
