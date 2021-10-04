@@ -14,7 +14,6 @@
  * For a full copy of the license see the LICENSE file.
  */
 
-#include "libprojectM/projectM-opengl.h"
 #include "libprojectM/projectM.hpp"
 
 #include "DistrhoPluginProM.hpp"
@@ -172,9 +171,6 @@ void DistrhoUIProM::onDisplay()
         return;
 
     fPM->renderFrame();
-
-    // turn off shaders at the end of the drawing cycle, so other things can draw properly
-    glUseProgram(0);
 }
 
 static projectMKeycode dgl2pmkey(const DGL_NAMESPACE::Key key) noexcept

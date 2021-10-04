@@ -57,6 +57,7 @@ protected:
         const double lineWidth = 1.0 * getScaleFactor();
 
 #ifdef DGL_OPENGL
+        glUseProgram(0);
         glMatrixMode(GL_MODELVIEW);
 #endif
 
