@@ -38,9 +38,6 @@ ifeq ($(MACOS),true)
 	install -d bin/ProM.vst/Contents/Resources/presets
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/Contents/Resources/presets/
 else
-	# VST2 directory
-	install -d bin/ProM.vst
-	mv bin/ProM-vst$(LIB_EXT) bin/ProM.vst/ProM$(LIB_EXT)
 	# VST2 fonts
 	install -d bin/ProM.vst/resources/fonts
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/resources/fonts/
@@ -62,9 +59,6 @@ endif
 ifneq ($(CROSS_COMPILING),true)
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh
-ifeq ($(MACOS),true)
-	@$(CURDIR)/dpf/utils/generate-vst-bundles.sh
-endif
 
 dpf/utils/lv2_ttl_generator:
 	$(MAKE) -C dpf/utils/lv2-ttl-generator

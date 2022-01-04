@@ -105,6 +105,7 @@ endif # !HAVE_PROJECTM
 # --------------------------------------------------------------
 # Do some magic
 
+USE_VST2_BUNDLE = true
 include ../../dpf/Makefile.plugins.mk
 
 # --------------------------------------------------------------
