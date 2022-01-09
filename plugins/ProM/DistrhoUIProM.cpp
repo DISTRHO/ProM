@@ -34,10 +34,8 @@ START_NAMESPACE_DISTRHO
 
 DistrhoUIProM::DistrhoUIProM()
     : UI(512, 512),
-      fPM(nullptr)
-#ifndef DGL_USE_OPENGL3
-    , fResizeHandle(this)
-#endif
+      fPM(nullptr),
+      fResizeHandle(this)
 {
     const double scaleFactor = getScaleFactor();
 
@@ -47,10 +45,8 @@ DistrhoUIProM::DistrhoUIProM()
     setGeometryConstraints(256*scaleFactor, 256*scaleFactor, true);
 
     // no need to show resize handle if window is user-resizable
-#ifndef DGL_USE_OPENGL3
     // if (isResizable())
     //     fResizeHandle.hide();
-#endif
 }
 
 DistrhoUIProM::~DistrhoUIProM()

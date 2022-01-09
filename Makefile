@@ -16,7 +16,7 @@ HAVE_PROJECTM = $(shell pkg-config --exists libprojectM && echo true)
 # --------------------------------------------------------------
 
 dgl:
-	$(MAKE) -C dpf/dgl opengl
+	$(MAKE) -C dpf/dgl opengl3 FILE_BROWSER_DISABLED=true
 
 plugins: dgl
 	$(MAKE) all -C plugins/ProM

@@ -55,6 +55,8 @@ public:
 protected:
     void onDisplay() override
     {
+        // TODO implement gl3 stuff in DPF
+#ifndef DGL_USE_OPENGL3
         const GraphicsContext& context(getGraphicsContext());
         const double lineWidth = 1.0 * getScaleFactor();
 
@@ -77,6 +79,7 @@ protected:
         l1b.draw(context, lineWidth);
         l2b.draw(context, lineWidth);
         l3b.draw(context, lineWidth);
+#endif
     }
 
     bool onMouse(const MouseEvent& ev) override
