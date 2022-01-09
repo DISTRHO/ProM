@@ -92,7 +92,7 @@ void DistrhoUIProM::uiIdle()
     }
 }
 
-void DistrhoUIProM::uiReshape(uint width, uint height)
+void DistrhoUIProM::uiReshape(const uint width, const uint height)
 {
     UI::uiReshape(width, height);
 
@@ -133,6 +133,9 @@ void DistrhoUIProM::onDisplay()
         return;
 
     fPM->renderFrame();
+
+    // some projectM versions do not turn off the last set GL program
+    glUseProgram(0);
 }
 
 static projectMKeycode dgl2pmkey(const DGL_NAMESPACE::Key key) noexcept
