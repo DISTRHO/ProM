@@ -327,7 +327,7 @@ jobs:
             done
       - name: Test VST2 plugins
         run: |
-            for p in $(ls bin/ | grep -e vst.so -e '.*\.vst/.*\.so'); do \
+            for p in $(find bin/ | grep -e vst.so -e '.*\.vst/.*\.so'); do \
                 env CARLA_BRIDGE_DUMMY=1 CARLA_BRIDGE_TESTING=native \
                     valgrind \
                     --error-exitcode=255 \

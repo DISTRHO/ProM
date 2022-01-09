@@ -1,6 +1,6 @@
 /*
  * Resize handle for DPF
- * Copyright (C) 2021 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2021-2022 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -45,7 +45,8 @@ public:
         resetArea();
     }
 
-    /** Set the handle size, minimum 16. */
+    /** Set the handle size, minimum 16.
+      * Scale factor is automatically applied on top of this size as needed */
     void setHandleSize(const uint size)
     {
         handleSize = std::max(16u, size);
