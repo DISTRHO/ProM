@@ -31,18 +31,26 @@ resources: gen
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.lv2/resources/presets/
 
 ifeq ($(MACOS),true)
-	# VST2 fonts
+	# CLAP + VST2 fonts
+	install -d bin/ProM.clap/Contents/Resources/fonts
 	install -d bin/ProM.vst/Contents/Resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.clap/Contents/Resources/fonts/
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/Contents/Resources/fonts/
-	# VST2 presets
+	# CLAP + VST2 presets
+	install -d bin/ProM.clap/Contents/Resources/presets
 	install -d bin/ProM.vst/Contents/Resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.clap/Contents/Resources/presets/
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/Contents/Resources/presets/
 else
-	# VST2 fonts
+	# CLAP + VST2 fonts
+	install -d bin/ProM.clap/resources/fonts
 	install -d bin/ProM.vst/resources/fonts
+	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.clap/resources/fonts/
 	ln -sf $(CURDIR)/plugins/ProM/projectM/fonts/*.ttf bin/ProM.vst/resources/fonts/
-	# VST2 presets
+	# CLAP + VST2 presets
+	install -d bin/ProM.clap/resources/presets
 	install -d bin/ProM.vst/resources/presets
+	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.clap/resources/presets/
 	ln -sf $(CURDIR)/plugins/ProM/projectM/presets/presets_* bin/ProM.vst/resources/presets/
 endif
 
