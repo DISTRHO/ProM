@@ -159,7 +159,7 @@ private:
     void resetArea()
     {
         const double scaleFactor = getScaleFactor();
-        const uint margin = 2.0 * scaleFactor;
+        const uint margin = 1.5 * scaleFactor;
         const uint size = handleSize * scaleFactor;
 
         area = Rectangle<uint>(getWidth() - size - margin,
